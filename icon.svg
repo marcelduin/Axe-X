@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- X Logo -->
+  <path d="M60 40 L100 80 L140 40 L160 60 L120 100 L160 140 L140 160 L100 120 L60 160 L40 140 L80 100 L40 60 Z" fill="black"/>
+  
+  <!-- Axe Handle -->
+  <line x1="20" y1="180" x2="120" y2="80" stroke="brown" stroke-width="10"/>
+  
+  <!-- Axe Head -->
+  <path d="M120 80 L160 40 L180 60 L140 100 Z" fill="silver"/>
+</svg>

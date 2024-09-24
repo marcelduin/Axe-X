@@ -1,0 +1,29 @@
+{
+	"manifest_version": 2,
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{f3c7fd5e-69b2-4e1b-b3bb-6cc32915d200}"
+		}
+	},
+	"icons": {
+		"48": "icon.svg",
+		"96": "icon.svg"
+	},
+	"name": "Axe X",
+	"version": "1.0.2",
+	"description": "Remove spam from your X feeds using custom filters because they don't seem to know how to do this themselves",
+	"permissions": [
+		"activeTab"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"https://x.com/*"
+			],
+			"js": [
+				"axe.js"
+			],
+			"run_at": "document_end"
+		}
+	]
+}
