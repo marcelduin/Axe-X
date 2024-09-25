@@ -6,6 +6,7 @@ const filters = [
 
 	// Regular text filters work as well
 	'new alerts have been posted in the last hours',
+	'is set and ready for a run up',
 ];
 
 // For counting the number of tags
