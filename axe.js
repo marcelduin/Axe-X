@@ -24,8 +24,9 @@ const toHide = [];
 
 // Button to still view the post
 const _show = document.createElement('button');
-_show.textContent = 'Axed. Show this post.';
-_show.setAttribute('style', 'display: block; font-size: 10px; opacity: .25;font-family:sans-serif;padding: 0 20px;margin: 5px auto;width:fit-content;cursor:pointer;');
+_show.textContent = 'Axed';
+_show.title = 'Show next post';
+_show.className = 'show-axed';
 
 // Hide per 10 elements
 const hideNext = () => {
@@ -38,11 +39,19 @@ const hideNext = () => {
 		_cnt.style.visibility = 'hidden';
 		const _btn = _show.cloneNode(true);
 		_cnt.parentNode.insertBefore(_btn, _cnt);
-		_btn.onclick = () => { _cnt.style.visibility = ''; _btn.remove(); }
+		_btn.onclick = () => { _cnt.style.visibility = ''; _btn.remove(); el.classList.add('axe-shown'); }
 	});
+	recountAxed();
 	toHide.length = 0;
 	to = undefined;
 }
+
+// Do a recount of all hidden / shown posts and update the buttons
+const recountAxed = () => document.querySelectorAll('div[data-axed]').forEach(el => {
+	let numSiblings = 0, s = el;
+	do numSiblings++; while((s = s.nextElementSibling) && s.hasAttribute('data-axed'));
+	if(numSiblings > 1) el.querySelector('button.show-axed')?.setAttribute('data-axed', numSiblings.toString());
+});
 
 // Number of axed posts
 let axed = 0;
@@ -83,7 +92,27 @@ function getContainer() {
 // Run when the page loads
 getContainer();
 
+// Hide any sequential hidden post
+const style = document.createElement('style');
+style.textContent = `button.show-axed {
+	display: block;
+	font-size: 10px;
+	opacity: .25;
+	font-family:sans-serif;
+	padding: 0 20px;
+	margin: 5px auto;
+	width:fit-content;
+	cursor:pointer;
+}
+button.show-axed[data-axed]::after {
+	content: ' (' attr(data-axed) ')';
+}
+div[data-axed]:not(.axe-shown) + div[data-axed] { display: none; }
+`;
+
 // Initial runtime
-(() => new MutationObserver(getContainer)
-	.observe(document.body, { childList: true, subtree: true })
-)();
+(() => {
+	new MutationObserver(getContainer)
+		.observe(document.body, { childList: true, subtree: true });
+	document.head.appendChild(style);
+})();
