@@ -41,5 +41,5 @@ Even to run this extension locally, you need to have your own Mozilla API key, a
 
 Once you've done that, you can do:
 
-	* `web-ext build` to build your extension, be sure to increase your version after each signing.
-	* `web-ext sign --channel=unlisted` to sign and compile to an `.xpi` file which can be directly loaded into Firefox, but not published to the listed Firefox extension store. Use `--channel=listed` for public channels.
+* `web-ext build` to build your extension, be sure to increase your version after each signing.
+* `web-ext sign --channel=unlisted` to sign and compile to an `.xpi` file which can be directly loaded into Firefox, but not published to the listed Firefox extension store. Use `--channel=listed` for public channels.
