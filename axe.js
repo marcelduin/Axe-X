@@ -61,7 +61,7 @@ const filterElements = els => els.map(el => {
 	while(el.parentNode && el.parentNode != container) el = el.parentNode;
 	return el;
 }).filter(el => !!el?.textContent && (!!filters.find(f => el.textContent.includes(f))
-		|| el.textContent.match(tagLink)?.length > maxTagLinks))
+		|| el.textContent.split('@')[1].match(tagLink)?.length > maxTagLinks))
 	.forEach(el => {
 		if(el.hasAttribute('data-axed')) return;
 		el.setAttribute('data-axed', (++axed).toString());
