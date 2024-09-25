@@ -1,16 +1,17 @@
 // Words, phrases, can include linked domains to be filtered
-// @X: why the heck haven't you banned these domains yet
-// TODO: make this configurable in this extension
 const filters = [
+	// @X: why the heck haven't you banned these domains yet
 	'ripplereward-official.net',
 	'safe-signals.net',
+
+	// Regular text filters work as well
+	'new alerts have been posted in the last hours',
 ];
 
 // For counting the number of tags
 const tagLink = /[$#][\w]+/gi;
 
 // Maximum number of tag links (#/$...) per post
-// TODO: make this configurable in this extension
 const maxTagLinks = 5;
 
 // Timeline HTML container
