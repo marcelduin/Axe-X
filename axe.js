@@ -52,7 +52,7 @@ const hideNext = () => {
 const recountAxed = () => document.querySelectorAll('div[data-axed]').forEach(el => {
 	let numSiblings = 0, s = el;
 	do numSiblings++; while((s = s.nextElementSibling) && s.hasAttribute('data-axed'));
-	if(numSiblings > 1) el.querySelector('button.show-axed')?.setAttribute('data-axed', numSiblings.toString());
+	if(numSiblings > 1) el.querySelector('button.show-axed')?.setAttribute('data-num-axed', numSiblings.toString());
 });
 
 // Number of axed posts
@@ -74,10 +74,12 @@ const filterElements = els => els.map(el => {
 // The posts observer
 let postObs;
 
+let isExtensionActive = false;
+
 // Get the main timeline HTML element
 function getContainer() {
 	const _cnt = document.querySelector('[aria-label="Home timeline"] div[style^="position: relative"]');
-	if(_cnt == container || !(container = _cnt)) return;
+	if(!isExtensionActive || _cnt == container || !(container = _cnt)) return;
 
 	// Disconnect any previous watcher
 	postObs?.disconnect();
@@ -91,9 +93,6 @@ function getContainer() {
 	filterElements(Array.from(container.childNodes));
 }
 
-// Run when the page loads
-getContainer();
-
 // Hide any sequential hidden post
 const style = document.createElement('style');
 style.textContent = `button.show-axed {
@@ -106,15 +105,45 @@ style.textContent = `button.show-axed {
 	width:fit-content;
 	cursor:pointer;
 }
-button.show-axed[data-axed]::after {
-	content: ' (' attr(data-axed) ')';
+button.show-axed[data-num-axed]::after {
+	content: ' (' attr(data-num-axed) ')';
 }
 div[data-axed]:not(.axe-shown) + div[data-axed] { display: none; }
 `;
+document.head.appendChild(style);
 
-// Initial runtime
-(() => {
-	new MutationObserver(getContainer)
+// Enable/disable
+let mainObs = undefined;
+function disable() {
+	mainObs?.disconnect();
+	postObs?.disconnect();
+	document.querySelectorAll('div[data-axed]').forEach(el => {
+		el.removeAttribute('data-axed');
+		const _btn = el.querySelector('button.show-axed');
+		_btn.nextElementSibling.style.visibility = '';
+		_btn.remove();
+	});
+	axed = 0;
+	container = undefined;
+}
+function enable() {
+	disable();
+	mainObs = new MutationObserver(getContainer)
 		.observe(document.body, { childList: true, subtree: true });
-	document.head.appendChild(style);
-})();
+	getContainer();
+}
+
+function setActive(active) {
+	isExtensionActive = active;
+	console.log(`Axe X is now ${isExtensionActive ? 'active' : 'inactive'}`);
+	if(isExtensionActive) enable();
+	else disable();
+}
+
+// Listen for messages from the background script
+browser.runtime.onMessage.addListener((message) => {
+	if (message.action === 'updateState') setActive(message.isActive);
+});
+
+// Request the current state when the content script loads
+browser.runtime.sendMessage({ action: 'getState' }).then(r => setActive(r.isActive));

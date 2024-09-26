@@ -13,7 +13,8 @@
 	"version": "1.0.2",
 	"description": "Remove unwanted posts from your X feeds using custom filters",
 	"permissions": [
-		"activeTab"
+		"activeTab",
+		"storage"
 	],
 	"author": "Marcel Duin",
 	"homepage_url": "https://github.com/marcelduin/Axe-X",
@@ -27,5 +28,13 @@
 			],
 			"run_at": "document_end"
 		}
-	]
+	],
+	"background": {
+		"scripts": ["bg.js"]
+	},
+	"browser_action": {
+		"default_icon": "icon.svg",
+		"default_title": "Axe X",
+		"default_popup": "popup.html"
+	}
 }
