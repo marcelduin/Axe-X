@@ -13,29 +13,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		hashtagCountInput.value = result.maxTagLinks || 0;
 	});
 	
-	toggleButton.addEventListener('change', function() {
-		var isActive = toggleButton.checked;
-		
-		// Save the state
-		browser.storage.local.set({isActive});
-		
-		// Update the status text
-		updateStatus(isActive);
-		
-		// Notify the background script
-		browser.runtime.sendMessage({action: 'toggleExtension', isActive});
-	});
-	
+	toggleButton.addEventListener('change', saveSettings);
+	saveButton.addEventListener('click', saveSettings);
+
 	function updateStatus(isActive) {
 		statusText.textContent = isActive ? 'Extension is on' : 'Extension is off';
 	}
-
-	saveButton.addEventListener('click', saveSettings);
 
 	function saveSettings() {
 		const isActive = toggleButton.checked;
 		const filters = filtersTextarea.value.split('\n').filter(filter => filter.trim() !== '');
 		const maxTagLinks = parseInt(hashtagCountInput.value, 10);
+
+		// Update the status text
+		updateStatus(isActive);
 
 		browser.storage.local.set({
 			isActive,
