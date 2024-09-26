@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "{f3c7fd5e-69b2-4e1b-b3bb-6cc32915d200}"
+			"id": "{20d72694-c2e7-4211-a013-5d593467af42}"
 		}
 	},
 	"icons": {
@@ -11,10 +11,12 @@
 	},
 	"name": "Axe X",
 	"version": "1.0.2",
-	"description": "Remove spam from your X feeds using custom filters because they don't seem to know how to do this themselves",
+	"description": "Remove unwanted posts from your X feeds using custom filters",
 	"permissions": [
 		"activeTab"
 	],
+	"author": "Marcel Duin",
+	"homepage_url": "https://github.com/marcelduin/Axe-X",
 	"content_scripts": [
 		{
 			"matches": [

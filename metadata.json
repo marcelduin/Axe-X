@@ -1,0 +1,8 @@
+{
+	"version": { "license": "MPL-2.0" },
+	"requires_payment": false,
+	"categories": { "firefox": ["feeds-news-blogging", "social-communication"] },
+	"summary": {
+		"en-US": "Remove unwanted posts from your X feeds using custom filters"
+	}
+}
