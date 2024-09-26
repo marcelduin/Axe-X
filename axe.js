@@ -1,19 +1,12 @@
-// Words, phrases, can include linked domains to be filtered
-const filters = [
-	// @X: why the heck haven't you banned these domains yet
-	'ripplereward-official.net',
-	'safe-signals.net',
-
-	// Regular text filters work as well
-	'new alerts have been posted in the last hours',
-	'is set and ready for a run up',
-];
+// Gotten from bg.js
+let state = {
+	isActive: true,
+	filters: [],
+	maxTagLinks: 5,
+}
 
 // For counting the number of tags
 const tagLink = /[$#][\w]+/gi;
-
-// Maximum number of tag links (#/$...) per post
-const maxTagLinks = 5;
 
 // Timeline HTML container
 let container;
@@ -27,7 +20,7 @@ const toHide = [];
 // Button to still view the post
 const _show = document.createElement('button');
 _show.textContent = 'Axed';
-_show.title = 'Show next post';
+_show.title = 'Show next axed post';
 _show.className = 'show-axed';
 
 // Hide per 10 elements
@@ -62,8 +55,8 @@ let axed = 0;
 const filterElements = els => els.map(el => {
 	while(el.parentNode && el.parentNode != container) el = el.parentNode;
 	return el;
-}).filter(el => !!el?.textContent && (!!filters.find(f => el.textContent.includes(f))
-		|| el.textContent.split('@')[1].match(tagLink)?.length > maxTagLinks))
+}).filter(el => !!el?.textContent && (!!state.filters.find(f => el.textContent.includes(f))
+		|| el.textContent.split('@').slice(1).join('@').split(/[^\s]@/)[0].match(tagLink)?.length > state.maxTagLinks))
 	.forEach(el => {
 		if(el.hasAttribute('data-axed')) return;
 		el.setAttribute('data-axed', (++axed).toString());
@@ -74,12 +67,10 @@ const filterElements = els => els.map(el => {
 // The posts observer
 let postObs;
 
-let isExtensionActive = false;
-
 // Get the main timeline HTML element
 function getContainer() {
 	const _cnt = document.querySelector('[aria-label="Home timeline"] div[style^="position: relative"]');
-	if(!isExtensionActive || _cnt == container || !(container = _cnt)) return;
+	if(!state.isActive || _cnt == container || !(container = _cnt)) return;
 
 	// Disconnect any previous watcher
 	postObs?.disconnect();
@@ -133,17 +124,17 @@ function enable() {
 	getContainer();
 }
 
-function setActive(active) {
-	isExtensionActive = active;
-	console.log(`Axe X is now ${isExtensionActive ? 'active' : 'inactive'}`);
-	if(isExtensionActive) enable();
+function setState(s) {
+	state = s;
+	console.log(`Axe X is now ${state.isActive ? 'active' : 'inactive'}`);
+	if(state.isActive) enable();
 	else disable();
 }
 
 // Listen for messages from the background script
 browser.runtime.onMessage.addListener((message) => {
-	if (message.action === 'updateState') setActive(message.isActive);
+	if (message.action === 'updateState') setState(message);
 });
 
 // Request the current state when the content script loads
-browser.runtime.sendMessage({ action: 'getState' }).then(r => setActive(r.isActive));
+browser.runtime.sendMessage({ action: 'getState' }).then(setState);
