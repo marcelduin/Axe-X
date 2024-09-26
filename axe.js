@@ -132,9 +132,7 @@ function setState(s) {
 }
 
 // Listen for messages from the background script
-browser.runtime.onMessage.addListener((message) => {
-	if (message.action === 'updateState') setState(message);
-});
+browser.runtime.onMessage.addListener(setState);
 
 // Request the current state when the content script loads
 browser.runtime.sendMessage({ action: 'getState' }).then(setState);

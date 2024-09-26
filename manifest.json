@@ -10,7 +10,7 @@
 		"96": "icon.svg"
 	},
 	"name": "Axe X",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Remove unwanted posts from your X feeds using custom filters",
 	"permissions": [
 		"activeTab",
