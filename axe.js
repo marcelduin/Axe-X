@@ -55,7 +55,7 @@ let axed = 0;
 const filterElements = els => els.map(el => {
 	while(el.parentNode && el.parentNode != container) el = el.parentNode;
 	return el;
-}).filter(el => !!el?.textContent && (!!state.filters.find(f => el.textContent.includes(f))
+}).filter(el => !!el?.textContent && (!!state.filters.find(f => f instanceof RegExp ? f.test(el.textContent) : el.textContent.includes(f))
 		|| el.textContent.split('@').slice(1).join('@').split(/[^\s]@/)[0].match(tagLink)?.length > state.maxTagLinks))
 	.forEach(el => {
 		if(el.hasAttribute('data-axed')) return;
@@ -125,6 +125,10 @@ function enable() {
 }
 
 function setState(s) {
+	// Allow for RegExps
+	for(let i=0;i<s.filters.length;i++)
+		if(s.filters[i].startsWith('/') && s.filters[i].endsWith('/'))
+			s.filters[i] = new RegExp(s.filters[i].slice(1,-1).replaceAll('\\','\\'), 'i');
 	state = s;
 	console.log(`Axe X is now ${state.isActive ? 'active' : 'inactive'}`);
 	if(state.isActive) enable();
