@@ -56,7 +56,8 @@ const filterElements = els => els.map(el => {
 	while(el.parentNode && el.parentNode != container) el = el.parentNode;
 	return el;
 }).filter(el => !!el?.textContent && (!!state.filters.find(f => f instanceof RegExp ? f.test(el.textContent) : el.textContent.includes(f))
-		|| el.textContent.split('@').slice(1).join('@').split(/[^\s]@/)[0].match(tagLink)?.length > state.maxTagLinks))
+		|| el.textContent.split('@').slice(1).join('@').split(/[^\s]@/)[0].match(tagLink)?.length > state.maxTagLinks)
+		|| el.textContent.match(/\s\$\w/g)?.length > state.maxTagLinks)
 	.forEach(el => {
 		if(el.hasAttribute('data-axed')) return;
 		el.setAttribute('data-axed', (++axed).toString());
